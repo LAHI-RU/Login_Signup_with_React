@@ -34,7 +34,23 @@ router.post("/login", async (req, res) => {
     return res.json({ message: "password is incorrect" });
   }
 
-  const token = jwt.sign({});
+  const token = jwt.sign({ username: user.username }, process.env.KEY, {
+    expiresIn: "1h",
+  });
+  res.cookie("token", token, { httpOnly: true, maxAge: 360000 });
+  return res.json({ status: true, message: "log in successfully" });
+});
+
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ message: "user not registered" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 export { router as UserRouter };

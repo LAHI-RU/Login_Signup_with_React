@@ -3,23 +3,20 @@ import "../App.css";
 import Axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const ForgotPassword = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
-  Axios.defaults.withCredentials = true;
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:3000/auth/login", {
+    Axios.post("http://localhost:3000/auth/forgot-password", {
       email,
-      password,
     })
       .then((response) => {
         if (response.data.status) {
-          navigate("/");
+          alert("Check your email for reset password link");
+          navigate("/login");
         }
       })
       .catch((err) => {
@@ -29,8 +26,13 @@ const Login = () => {
   return (
     <div className="sign-up-container">
       <form className="sign-up-form" onSubmit={handleSubmit}>
-        <h2>Login</h2>
-
+        <h2>Sign Up</h2>
+        <label htmlFor="username"> Username: </label>
+        <input
+          type="text"
+          placeholder="Username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
         <label htmlFor="email"> Email: </label>
         <input
           type="email"
@@ -44,14 +46,31 @@ const Login = () => {
           placeholder="******"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit"> Login </button>
-        <Link to="/forgotPassword"> Forgot Password? </Link>
+        <button type="submit"> Send </button>
+      </form>
+    </div>
+  );
+
+  return (
+    <div className="sign-up-container">
+      <form className="sign-up-form" onSubmit={handleSubmit}>
+        <h2> Forgot Password </h2>
+
+        <label htmlFor="email"> Email: </label>
+        <input
+          type="email"
+          autoComplete="off"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <button type="submit"> Sign Up </button>
         <p>
-          Don't have an Account? <Link to="/signup"> Sign Up </Link>
+          Have an Account? <Link to="/login"> Login </Link>
         </p>
       </form>
     </div>
   );
 };
 
-export default Login;
+export default ForgotPassword;
