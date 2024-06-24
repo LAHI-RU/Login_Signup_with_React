@@ -3,6 +3,7 @@ import bcryt from "bcrypt";
 const router = express.Router();
 import { User } from "../models/User.js";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
 
 router.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
@@ -28,6 +29,29 @@ router.post("/login", async (req, res) => {
   if (!user) {
     return res.json({ message: "user is not registered" });
   }
+
+  var transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "lahirudananjaya1236@gmail.com",
+      pass: "1236",
+    },
+  });
+
+  var mailOptions = {
+    from: "youremail@gmail.com",
+    to: "myfriend@yahoo.com",
+    subject: "Sending Email using Node.js",
+    text: "That was easy!",
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: " + info.response);
+    }
+  });
 
   const validPassword = await bcryt.compare(password, user.password);
   if (!validPassword) {
