@@ -3,8 +3,7 @@ import "../App.css";
 import Axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
-const Signup = () => {
-  const [username, setUsername] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,14 +11,13 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    Axios.post("http://localhost:3000/auth/signup", {
-      username,
+    Axios.post("http://localhost:3000/auth/login", {
       email,
       password,
     })
       .then((response) => {
         if (response.data.status) {
-          navigate("/login");
+          navigate("/home");
         }
       })
       .catch((err) => {
@@ -29,13 +27,8 @@ const Signup = () => {
   return (
     <div className="sign-up-container">
       <form className="sign-up-form" onSubmit={handleSubmit}>
-        <h2>Sign Up</h2>
-        <label htmlFor="username"> Username: </label>
-        <input
-          type="text"
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <h2>Login</h2>
+
         <label htmlFor="email"> Email: </label>
         <input
           type="email"
@@ -49,13 +42,13 @@ const Signup = () => {
           placeholder="******"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit"> Sign Up </button>
+        <button type="submit"> Login </button>
         <p>
-          Have an Account? <Link to="/login"> Login </Link>
+          Don't have an Account? <Link to="/signup"> Sign Up </Link>
         </p>
       </form>
     </div>
   );
 };
 
-export default Signup;
+export default Login;
