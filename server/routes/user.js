@@ -30,29 +30,6 @@ router.post("/login", async (req, res) => {
     return res.json({ message: "user is not registered" });
   }
 
-  var transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "lahirudananjaya1236@gmail.com",
-      pass: "1236",
-    },
-  });
-
-  var mailOptions = {
-    from: "youremail@gmail.com",
-    to: "myfriend@yahoo.com",
-    subject: "Sending Email using Node.js",
-    text: "That was easy!",
-  };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email sent: " + info.response);
-    }
-  });
-
   const validPassword = await bcryt.compare(password, user.password);
   if (!validPassword) {
     return res.json({ message: "password is incorrect" });
@@ -72,6 +49,33 @@ router.post("/forgot-password", async (req, res) => {
     if (!user) {
       return res.json({ message: "user not registered" });
     }
+
+    const token = jwt.sign({ id: user._id }, process.env.KEY, {
+      expiresIn: "5m",
+    });
+
+    var transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "dhanaeusl45@gmail.com",
+        pass: "igza zmhm pwub szsc",
+      },
+    });
+
+    var mailOptions = {
+      from: "dhanaeusl45@gmail.com",
+      to: "lahirudananjaya1236@gmail.com",
+      subject: "Reset Password",
+      text: "http://localhost:5173/resetPassword/${token}",
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        return res.join({ message: "error sending email" });
+      } else {
+        return res.join({ status: true, message: "email sent" });
+      }
+    });
   } catch (err) {
     console.log(err);
   }
