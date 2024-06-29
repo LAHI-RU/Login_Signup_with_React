@@ -81,4 +81,40 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
+router.post("/reset-password/:token", async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+  try {
+    const decoded = await jwt.verify(token, process.env.KEY);
+    const id = decoded.id;
+    const hashPassword = await bcryt.hash(password, 10);
+    await User.findByIdAndUpdate({ _id: id }, { password: hashPassword });
+    return res.json({ status: true, message: "updated password" });
+  } catch (err) {
+    return res.json("invalid token");
+  }
+});
+
+const verifyUser = async (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      return req.json({ status: false, message: "no token" });
+    }
+    const decoded = await jwt.verify(token, process.env.KEY);
+    next();
+  } catch (err) {
+    return res.json(err);
+  }
+};
+
+router.get("/verify", (req, res) => {
+  return res.json({ status: true, message: "authorized" });
+});
+
+router.get("/logout", (req, res) => {
+  res.clearCookie("token");
+  return res.json({ status: true });
+});
+
 export { router as UserRouter };

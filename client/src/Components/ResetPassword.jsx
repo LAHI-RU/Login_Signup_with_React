@@ -18,6 +18,7 @@ const ResetPassword = () => {
         if (response.data.status) {
           navigate("/login");
         }
+        console.log(response.data);
       })
       .catch((err) => {
         console.log(err);
