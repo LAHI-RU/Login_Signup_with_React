@@ -3,6 +3,7 @@ import Signup from "./Components/Signup";
 import Login from "./Components/Login";
 import Home from "./Components/Home";
 import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
-        <Route path="/resetPassword" element={<ForgotPassword />}></Route>
+        <Route path="/resetPassword/:token" element={<ResetPassword />}></Route>
       </Routes>
     </BrowserRouter>
   );
