@@ -15,7 +15,9 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/forgotPassword" element={<ForgotPassword />}></Route>
         <Route path="/resetPassword/:token" element={<ResetPassword />}></Route>
-        <Route path="/dashboard" element={Dashboard />}> </Route>
+        <Route path="/dashboard" element={<Dashboard />}>
+          {" "}
+        </Route>
       </Routes>
     </BrowserRouter>
   );
