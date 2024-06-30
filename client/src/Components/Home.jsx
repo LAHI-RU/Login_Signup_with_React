@@ -1,13 +1,14 @@
+/* eslint-disable no-unused-vars */
 import axios from "axios";
 import React from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
-
+  axios.defaults.withCredentials = true;
   const handleLogout = () => {
     axios
-      .get("https://localhost:3000/auth/logout")
+      .get("http://localhost:3000/auth/logout")
       .then((res) => {
         if (res.data.status) {
           navigate("/login");
