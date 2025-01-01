@@ -101,4 +101,4 @@ This project is licensed under the [MIT License](LICENSE).
 
 ---
 
-Made with ❤️ by [W G Lahiru Dhananjaya Bandara](https://github.com/LAHI-RU).
+Made with ❤️ by [LAHI-RU](https://github.com/LAHI-RU).
