@@ -55,8 +55,7 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// server/routes/user.js - Fixed forgot password route
-
+// FIXED: Changed createTransporter to createTransport
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
   
@@ -80,8 +79,8 @@ router.post("/forgot-password", async (req, res) => {
 
     console.log('✅ Token generated for user:', user.email); // Debug log
 
-    // Email configuration
-    const transporter = nodemailer.createTransporter({
+    // Email configuration - FIXED: createTransport instead of createTransporter
+    const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
@@ -90,8 +89,16 @@ router.post("/forgot-password", async (req, res) => {
     });
 
     // Verify transporter before sending
-    await transporter.verify();
-    console.log('✅ Email transporter verified'); // Debug log
+    try {
+      await transporter.verify();
+      console.log('✅ Email transporter verified'); // Debug log
+    } catch (verifyError) {
+      console.error('❌ Email transporter verification failed:', verifyError);
+      return res.json({ 
+        status: false, 
+        message: "Email service configuration error. Please contact support." 
+      });
+    }
 
     const resetLink = `http://localhost:5173/resetPassword/${token}`;
     
@@ -171,6 +178,11 @@ router.post("/forgot-password", async (req, res) => {
         status: false, 
         message: "Email service unavailable. Please try again later." 
       });
+    } else if (err.message.includes('ENOTFOUND') || err.message.includes('getaddrinfo')) {
+      return res.json({ 
+        status: false, 
+        message: "Network error. Please check your internet connection." 
+      });
     } else {
       return res.json({ 
         status: false, 
@@ -199,7 +211,7 @@ const verifyUser = async (req, res, next) => {
   try {
     const token = req.cookies.token;
     if (!token) {
-      return res.json({ status: false, message: "No token provided" }); // Fixed: req -> res
+      return res.json({ status: false, message: "No token provided" });
     }
     const decoded = await jwt.verify(token, process.env.KEY);
     req.user = decoded; // Add user info to request
@@ -210,7 +222,7 @@ const verifyUser = async (req, res, next) => {
 };
 
 router.get("/verify", verifyUser, (req, res) => {
-  return res.json({ status: true, message: "Authorized" });
+  return res.json({ status: true, message: "Authorized", user: req.user });
 });
 
 router.get("/logout", (req, res) => {
